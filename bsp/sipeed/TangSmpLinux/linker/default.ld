@@ -1,0 +1,4 @@
+RAM_ORIGIN = 0x80780000;
+RAM_LENGTH = 512K;
+
+INCLUDE default_ram.ld
