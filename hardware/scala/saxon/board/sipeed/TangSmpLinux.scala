@@ -1,13 +1,11 @@
 package saxon.board.sipeed
 
-import java.awt.image.BufferedImage
-import java.awt.{Color, Dimension, Graphics}
-
-import javax.swing.{JFrame, JPanel, WindowConstants}
 import saxon.common.I2cModel
 import saxon._
-import spinal.core._
+import spinal.core
+import spinal.core.{Clock, _}
 import spinal.core.sim._
+import spinal.lib.blackbox.lattice.ecp5.{IFS1P3BX, ODDRX1F, OFS1P3BX}
 import spinal.lib.blackbox.xilinx.s7.{BSCANE2, BUFG, STARTUPE2}
 import spinal.lib.bus.bmb._
 import spinal.lib.bus.bsb.BsbInterconnectGenerator
@@ -22,30 +20,27 @@ import spinal.lib.com.uart.UartCtrlMemoryMappedConfig
 import spinal.lib.com.uart.sim.{UartDecoder, UartEncoder}
 import spinal.lib.generator._
 import spinal.lib.graphic.RgbConfig
-import spinal.lib.graphic.vga.{BmbVgaCtrlGenerator, BmbVgaCtrlParameter, Vga}
-import spinal.lib.io.{Gpio, InOutWrapper}
+import spinal.lib.graphic.vga.{BmbVgaCtrlGenerator, BmbVgaCtrlParameter}
+import spinal.lib.io.{Gpio, InOutWrapper, TriStateOutput}
+import spinal.lib.master
 import spinal.lib.memory.sdram.sdr._
 import spinal.lib.memory.sdram.xdr.CoreParameter
-import spinal.lib.memory.sdram.xdr.phy.XilinxS7Phy
+import spinal.lib.memory.sdram.xdr.phy.{Ecp5Sdrx2Phy, XilinxS7Phy}
 import spinal.lib.misc.analog.{BmbBsbToDeltaSigmaGenerator, BsbToDeltaSigmaParameter}
 import spinal.lib.system.dma.sg.{DmaMemoryLayout, DmaSgGenerator}
 import vexriscv.demo.smp.VexRiscvSmpClusterGen
-import vexriscv.plugin.AesPlugin
 
 
 // Define a SoC abstract enough to be used in simulation (no PLL, no PHY)
 class TangSmpLinuxAbstract(cpuCount : Int) extends VexRiscvClusterGenerator(cpuCount){
-  val fabric = withDefaultFabric()
+  val fabric = withDefaultFabric(withOutOfOrderDecoder = true)
 
-  val sdramA = SdramXdrBmbGenerator(memoryAddress = 0x80000000l)
+  val sdramA = SdramXdrBmbGenerator(memoryAddress = 0x80000000l).mapCtrlAt(0x100000)
   val sdramA0 = sdramA.addPort()
-
-  val sdramB = SdramSdrBmbGenerator(0x80000000l)
 
   val gpioA = BmbGpioGenerator(0x00000)
 
   val uartA = BmbUartGenerator(0x10000)
-  uartA.connectInterrupt(plic, 1)
 
   val spiA = new BmbSpiGenerator(0x20000){
     val decoder = SpiPhyDecoderGenerator(phy)
@@ -69,34 +64,40 @@ class TangSmpLinuxAbstract(cpuCount : Int) extends VexRiscvClusterGenerator(cpuC
 
 class TangSmpLinux(cpuCount : Int) extends Generator{
   // Define the clock domains used by the SoC
-  val debugCd = ClockDomainResetGenerator()
-  debugCd.holdDuration.load(4095)
-  debugCd.enablePowerOnReset()
+  val globalCd = ClockDomainResetGenerator()
+  globalCd.holdDuration.load(255)
+  globalCd.enablePowerOnReset()
 
   val systemCd = ClockDomainResetGenerator()
+  systemCd.setInput(globalCd)
   systemCd.holdDuration.load(63)
-  systemCd.setInput(debugCd)
 
-  // ...
-  val system = new TangSmpLinuxAbstract(cpuCount)
+  val system = new TangSmpLinuxAbstract(cpuCount){
+    val phyA = EG4S20PhyGenerator().connect(sdramA)
+  }
   system.onClockDomain(systemCd.outputClockDomain)
-  system.sdramA.onClockDomain(systemCd.outputClockDomain)
 
   // Enable native JTAG debug
-  val debug = system.withDebugBus(debugCd,systemCd, 0x10B80000).withBscane2(userId = 2)
+  val debug = system.withDebugBus(globalCd, systemCd, 0x10B80000).withJtag()
 
   //Manage clocks and PLL
   val clocking = add task new Area{
     val MainClk = in Bool()
-    val Resetn = in Bool()
+    val ResetN = in Bool()
 
-    debugCd.setInput(
+    globalCd.setInput(
       ClockDomain(
         clock = MainClk,
-        frequency = FixedFrequency(24 MHz)
+        reset = ResetN,
+        frequency = FixedFrequency(24 MHz),
+        config = ClockDomainConfig(
+          resetKind = ASYNC,
+          resetActiveLevel = LOW
+        )
       )
     )
   }
+
 }
 
 object TangSmpLinuxAbstract{
@@ -124,15 +125,16 @@ object TangSmpLinuxAbstract{
     ramA.size.load(8 KiB)
     ramA.hexInit.load(null)
 
+
     sdramA.coreParameter.load(CoreParameter(
-      portTockenMin = 4,
-      portTockenMax = 8,
+      portTockenMin = 16,
+      portTockenMax = 32,
       timingWidth = 4,
       refWidth = 16,
       stationCount  = 2,
       bytePerTaskMax = 64,
-      writeLatencies = List(3),
-      readLatencies = List(5+3, 5+4)
+      writeLatencies = List(0),
+      readLatencies = List(5, 6, 7)
     ))
 
     uartA.parameter load UartCtrlMemoryMappedConfig(
@@ -140,10 +142,11 @@ object TangSmpLinuxAbstract{
       txFifoDepth = 128,
       rxFifoDepth = 128
     )
+    uartA.connectInterrupt(plic, 1)
 
     gpioA.parameter load Gpio.Parameter(
-      width = 32,
-      interrupt = List(24, 25, 26, 27)
+      width = 28,
+      interrupt = List(15)
     )
     gpioA.connectInterrupts(plic, 4)
 
@@ -154,20 +157,22 @@ object TangSmpLinuxAbstract{
         spi = SpiXdrParameter(
           dataWidth = 2,
           ioRate = 1,
-          ssWidth = 3
+          ssWidth = 4
         )
-      ) .addFullDuplex(id = 0).addHalfDuplex(id = 1, rate = 1, ddr = false, spiWidth = 1, lateSampling = false),
+      ) .addFullDuplex(id = 0, lateSampling = true)
+        .addHalfDuplex(id = 1, rate = 1, ddr = false, spiWidth = 1, lateSampling = false),
       cmdFifoDepth = 256,
       rspFifoDepth = 256
     )
 
     // Add some interconnect pipelining to improve FMax
     for(cpu <- cores) interconnect.setPipelining(cpu.dBus)(cmdValid = true, invValid = true, ackValid = true, syncValid = true)
+    interconnect.setPipelining(fabric.dBus.bmb)(cmdValid = true, cmdReady = true, rspValid = true)
+    interconnect.setPipelining(fabric.iBus.bmb)(cmdValid = true)
     interconnect.setPipelining(fabric.exclusiveMonitor.input)(cmdValid = true, cmdReady = true, rspValid = true)
     interconnect.setPipelining(fabric.invalidationMonitor.output)(cmdValid = true, cmdReady = true, rspValid = true)
     interconnect.setPipelining(bmbPeripheral.bmb)(cmdHalfRate = true, rspHalfRate = true)
     interconnect.setPipelining(sdramA0.bmb)(cmdValid = true, cmdReady = true, rspValid = true)
-    interconnect.setPipelining(fabric.iBus.bmb)(cmdValid = true)
 
     g
   }
@@ -179,21 +184,18 @@ object TangSmpLinux {
   def default(g : TangSmpLinux) = g{
     import g._
 
-    sdramDomain.phyA.sdramLayout.load(MT41K128M16JT.layout)
-    TangSmpLinuxAbstract.default(system)
+    system.phyA.sdramLayout.load(EG4S20.layout)
 
+    TangSmpLinuxAbstract.default(system)
     system.ramA.hexInit.load("software/standalone/bootloader/build/bootloader.hex")
+
     g
   }
 
   //Generate the SoC
   def main(args: Array[String]): Unit = {
-    val report = SpinalRtlConfig
-      .copy(
-        defaultConfigForClockDomains = ClockDomainConfig(resetKind = SYNC),
-        inlineRom = true
-      ).addStandardMemBlackboxing(blackboxByteEnables)
-       .generateVerilog(default(new TangSmpLinux(2)).toComponent())
-    BspGenerator("sipped/Tang", report.toplevel.generator, report.toplevel.generator.system.cores(0).dBus)
+
+    val report = SpinalRtlConfig.generateVerilog(default(new TangSmpLinux(1)).toComponent())
+    BspGenerator("sipeed/TangSmpLinux", report.toplevel.generator, report.toplevel.generator.system.cores(0).dBus)
   }
 }

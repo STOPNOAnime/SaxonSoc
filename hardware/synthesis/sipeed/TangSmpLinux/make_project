@@ -1,0 +1,14 @@
+#!/bin/bash
+TD_HOME=/opt/TD
+
+rm -rf build
+mkdir build
+cd build
+
+cp ../../../../netlist/TangSmpLinux* .
+cp ../adc.adc .
+cp ../sdc.sdc .
+cp ../top.v .
+cp ../make.tcl .
+
+$TD_HOME/bin/td make.tcl

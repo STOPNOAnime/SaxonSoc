@@ -143,6 +143,20 @@ static const SdramTiming AS4C32M16SB_7TCN_ps = {
     .FAW =        0
 };
 
+static const SdramTiming EG4S20_ps = {
+    .generation = SDRAM_TIMING_SDR,
+	.REF =  7800000,
+	.RAS =    60000,
+	.RP  =    40000,
+	.RFC =    80000,
+	.RRD =    14000,
+	.RCD =    40000,
+	.RTP =    15000,
+	.WTR =    15000,
+	.WTP =    14000,
+	.FAW =    40000
+};
+
 static void sdram_udelay(u32 us){
     #ifndef SPINAL_SIM
     bsp_uDelay(us);

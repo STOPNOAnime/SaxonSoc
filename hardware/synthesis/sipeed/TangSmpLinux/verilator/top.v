@@ -70,7 +70,7 @@ TangSmpLinux TangSmpLinux (
 	.system_phyA_sdram_RASn(sdram_RASn),
 	.system_phyA_sdram_WEn(sdram_WEn)
 );
-
+/*
 EG_PHY_SDRAM_2M_32 EG_PHY_SDRAM_2M_32 (
     .clk(MainClk), 
 	.ras_n(sdram_RASn), 
@@ -86,5 +86,5 @@ EG_PHY_SDRAM_2M_32 EG_PHY_SDRAM_2M_32 (
 	.dm3(sdram_DQM[3]),  
 	.cke(sdram_CKE) 
 );
-
+*/
 endmodule

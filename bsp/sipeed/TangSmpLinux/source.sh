@@ -37,6 +37,16 @@ saxon_bitstream(){
   make all
 }
 
+saxon_bitstream_flash(){
+  cd $SAXON_SOC/hardware/synthesis/sipeed/TangSmpLinux
+  make flash
+}
+
+saxon_bitstream_clean(){
+  cd $SAXON_SOC/hardware/synthesis/sipeed/TangSmpLinux
+  make clean
+}
+
 saxon_serial(){
   picocom -b 115200 /dev/ttyUSB1 --imap lfcrlf
 }

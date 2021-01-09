@@ -2,6 +2,7 @@
 
 - Sipeed Tang Board
 - USB micro cable
+- External JTAG interface
 - Optional SDCARD
 - Optional custom PS2 and VGA interface #TODO
 
@@ -88,12 +89,12 @@ It will take quite a while to build, good luck and have fun <3
 
 ```
 # Getting this repository
-mkdir ArtyA7SmpLinux 
-cd ArtyA7SmpLinux
+mkdir TangSmpLinux 
+cd TangmpLinux
 git clone https://github.com/SpinalHDL/SaxonSoc.git -b dev-0.1 --recursive SaxonSoc
 
 # Sourcing the build script
-source SaxonSoc/bsp/digilent/ArtyA7SmpLinux/source.sh
+source SaxonSoc/bsp/sipeed/TangSmpLinux/source.sh
 
 # Clone opensbi, u-boot, linux, buildroot, openocd
 saxon_clone
@@ -116,7 +117,10 @@ saxon_openocd
 ## Loading the FPGA and booting linux with ramfs using openocd
 
 ```
-source SaxonSoc/bsp/digilent/ArtyA7SmpLinux/source.sh
+source SaxonSoc/bsp/sipeed/TangSmpLinux/source.sh
+
+# Load the bitestream into the FPGA
+saxon_bitstream_flash
 
 # Boot linux using a ram file system (no sdcard), look at the saxon_buildroot_load end message
 saxon_fpga_load

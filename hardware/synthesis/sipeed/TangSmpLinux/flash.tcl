@@ -1,0 +1,1 @@
+download -mode program_spi -bit top.bit

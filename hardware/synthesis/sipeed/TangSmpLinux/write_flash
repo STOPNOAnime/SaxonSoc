@@ -1,0 +1,7 @@
+#!/bin/bash
+TD_HOME=/opt/TD
+
+cd build
+cp ../flash.tcl .
+
+$TD_HOME/bin/td flash.tcl
