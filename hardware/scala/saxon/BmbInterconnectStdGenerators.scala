@@ -53,9 +53,32 @@ case class BmbOnChipRamGenerator(val address: Handle[BigInt] = Unset)
   )
 }
 
+case class SdramSdrBmbGenerator(val address: Handle[BigInt] = Unset)
+                               (implicit interconnect: BmbInterconnectGenerator) extends Generator {
 
+  val layout = createDependency[SdramLayout]
+  val timings = createDependency[SdramTimings]
+  val requirements = createDependency[BmbAccessParameter]
 
+  val bmb   = produce(logic.io.bmb)
+  val sdram = produceIo(logic.io.sdram)
 
+  dependencies += address
+
+  interconnect.addSlave(
+    accessCapabilities = Dependable(layout)(BmbSdramCtrl.busCapabilities(layout)),
+    accessRequirements = requirements,
+    bus = bmb,
+    mapping = layout.produce(SizeMapping(address, layout.capacity))
+  )
+
+  val logic = add task BmbSdramCtrl(
+    bmbParameter = requirements.toBmbParameter(),
+    layout = layout,
+    timing = timings,
+    CAS = 3
+  )
+}
 
 case class  BmbToApb3Decoder(address : Handle[BigInt] = Unset)(implicit interconnect: BmbInterconnectGenerator, apbDecoder : Apb3DecoderGenerator) extends Generator {
   val input = produce(logic.bridge.io.input)

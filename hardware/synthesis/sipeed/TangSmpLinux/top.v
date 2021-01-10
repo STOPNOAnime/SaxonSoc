@@ -58,17 +58,17 @@ TangSmpLinux TangSmpLinux (
 	.debug_jtag_tdo(jtag_tdo),
 	.debug_jtag_tck(jtag_tck),
 
-	.system_phyA_sdram_ADDR(sdram_ADDR),
-	.system_phyA_sdram_BA(sdram_BA),
-	.system_phyA_sdram_DQ_read(sdram_DQ_read),
-	.system_phyA_sdram_DQ_write(sdram_DQ_write),
-	.system_phyA_sdram_DQ_writeEnable(sdram_DQ_writeEnable),
-	.system_phyA_sdram_DQM(sdram_DQM),
-	.system_phyA_sdram_CASn(sdram_CASn),
-	.system_phyA_sdram_CKE(sdram_CKE),
-	.system_phyA_sdram_CSn(sdram_CSn),
-	.system_phyA_sdram_RASn(sdram_RASn),
-	.system_phyA_sdram_WEn(sdram_WEn)
+	.system_sdramA_sdram_ADDR(sdram_ADDR),
+	.system_sdramA_sdram_BA(sdram_BA),
+	.system_sdramA_sdram_DQ_read(sdram_DQ_read),
+	.system_sdramA_sdram_DQ_write(sdram_DQ_write),
+	.system_sdramA_sdram_DQ_writeEnable(sdram_DQ_writeEnable),
+	.system_sdramA_sdram_DQM(sdram_DQM),
+	.system_sdramA_sdram_CASn(sdram_CASn),
+	.system_sdramA_sdram_CKE(sdram_CKE),
+	.system_sdramA_sdram_CSn(sdram_CSn),
+	.system_sdramA_sdram_RASn(sdram_RASn),
+	.system_sdramA_sdram_WEn(sdram_WEn)
 );
 
 EG_PHY_SDRAM_2M_32 EG_PHY_SDRAM_2M_32 (

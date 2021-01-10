@@ -12,8 +12,6 @@
 * SPI, which provide
   * FPGA SPI flash access in Linux
   * SDCARD in linux
-  * User usage SPI
-* VGA, which can be used with DirectFB or X11 in linux
 
 ## Boot sequence
 
@@ -42,13 +40,14 @@ OnChipRam (8KB):
 
 SDRAM (8MB):
 - 0x80000000 : Linux kernel
-- 0x806F0000 : dtb 
 - 0x80700000 : u-boot
 - 0x80780000 : openSBI, 512 KB of reserved-memory (Linux can't use that memory space)
+- 0x807F0000 : dtb 
 
 FPGA SPI flash:
-- 0x000000   : u-boot
-- 0x080000   : openSBI
+- 0x000000   : openSBI
+- 0x040000   : u-boot
+
 
 Sdcard :
 - p1:uImage  : Linux kernel
@@ -91,7 +90,7 @@ It will take quite a while to build, good luck and have fun <3
 # Getting this repository
 mkdir TangSmpLinux 
 cd TangmpLinux
-git clone https://github.com/SpinalHDL/SaxonSoc.git -b dev-0.1 --recursive SaxonSoc
+git clone https://github.com/STOPNOAnime/SaxonSoc.git -b dev-0.1 --recursive SaxonSoc
 
 # Sourcing the build script
 source SaxonSoc/bsp/sipeed/TangSmpLinux/source.sh
@@ -99,7 +98,7 @@ source SaxonSoc/bsp/sipeed/TangSmpLinux/source.sh
 # Clone opensbi, u-boot, linux, buildroot, openocd
 saxon_clone
 
-# Build the FPGA bitstream
+# Build the FPGA bitstream and flash it
 saxon_standalone_compile bootloader
 saxon_netlist
 saxon_bitstream
@@ -110,7 +109,6 @@ saxon_uboot
 saxon_buildroot
 
 # Build the programming tools
-saxon_standalone_compile sdramInit
 saxon_openocd
 ```
 
@@ -121,6 +119,9 @@ source SaxonSoc/bsp/sipeed/TangSmpLinux/source.sh
 
 # Load the bitestream into the FPGA
 saxon_bitstream_flash
+
+# Connect with openocd
+saxon_openocd_connect
 
 # Boot linux using a ram file system (no sdcard), look at the saxon_buildroot_load end message
 saxon_fpga_load

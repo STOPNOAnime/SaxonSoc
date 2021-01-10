@@ -33,10 +33,9 @@ import vexriscv.demo.smp.VexRiscvSmpClusterGen
 
 // Define a SoC abstract enough to be used in simulation (no PLL, no PHY)
 class TangSmpLinuxAbstract(cpuCount : Int) extends VexRiscvClusterGenerator(cpuCount){
-  val fabric = withDefaultFabric(withOutOfOrderDecoder = true)
+  val fabric = withDefaultFabric(withOutOfOrderDecoder = false)
 
-  val sdramA = SdramXdrBmbGenerator(memoryAddress = 0x80000000l).mapCtrlAt(0x100000)
-  val sdramA0 = sdramA.addPort()
+  val sdramA = SdramSdrBmbGenerator(address = 0x80000000l)
 
   val gpioA = BmbGpioGenerator(0x00000)
 
@@ -57,8 +56,8 @@ class TangSmpLinuxAbstract(cpuCount : Int) extends VexRiscvClusterGenerator(cpuC
   interconnect.addConnection(bmbPeripheral.bmb, ramA.ctrl)
 
   interconnect.addConnection(
-    fabric.iBus.bmb -> List(sdramA0.bmb, bmbPeripheral.bmb),
-    fabric.dBus.bmb -> List(sdramA0.bmb, bmbPeripheral.bmb)
+    fabric.iBus.bmb -> List(sdramA.bmb, bmbPeripheral.bmb),
+    fabric.dBus.bmb -> List(sdramA.bmb, bmbPeripheral.bmb)
   )
 }
 
@@ -73,7 +72,6 @@ class TangSmpLinux(cpuCount : Int) extends Generator{
   systemCd.holdDuration.load(63)
 
   val system = new TangSmpLinuxAbstract(cpuCount){
-    val phyA = EG4S20PhyGenerator().connect(sdramA)
   }
   system.onClockDomain(systemCd.outputClockDomain)
 
@@ -125,18 +123,6 @@ object TangSmpLinuxAbstract{
     ramA.size.load(8 KiB)
     ramA.hexInit.load(null)
 
-
-    sdramA.coreParameter.load(CoreParameter(
-      portTockenMin = 16,
-      portTockenMax = 32,
-      timingWidth = 4,
-      refWidth = 16,
-      stationCount  = 2,
-      bytePerTaskMax = 64,
-      writeLatencies = List(0),
-      readLatencies = List(5, 6, 7)
-    ))
-
     uartA.parameter load UartCtrlMemoryMappedConfig(
       baudrate = 115200,
       txFifoDepth = 128,
@@ -172,7 +158,7 @@ object TangSmpLinuxAbstract{
     interconnect.setPipelining(fabric.exclusiveMonitor.input)(cmdValid = true, cmdReady = true, rspValid = true)
     interconnect.setPipelining(fabric.invalidationMonitor.output)(cmdValid = true, cmdReady = true, rspValid = true)
     interconnect.setPipelining(bmbPeripheral.bmb)(cmdHalfRate = true, rspHalfRate = true)
-    interconnect.setPipelining(sdramA0.bmb)(cmdValid = true, cmdReady = true, rspValid = true)
+    //interconnect.setPipelining(sdramA.bmb)(cmdValid = true, cmdReady = true, rspValid = true)
 
     g
   }
@@ -184,7 +170,8 @@ object TangSmpLinux {
   def default(g : TangSmpLinux) = g{
     import g._
 
-    system.phyA.sdramLayout.load(EG4S20.layout)
+    system.sdramA.layout.load(EG4S20.layout)
+    system.sdramA.timings.load(EG4S20.timingGrade7)
 
     TangSmpLinuxAbstract.default(system)
     system.ramA.hexInit.load("software/standalone/bootloader/build/bootloader.hex")

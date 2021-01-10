@@ -193,20 +193,6 @@ case class Ecp5Sdrx2PhyGenerator() extends Generator{
   }
 }
 
-case class EG4S20PhyGenerator() extends Generator{
-  val sdramLayout = createDependency[SdramLayout]
-  val sdram = produceIo(logic.io.sdram)
-  val logic = add task SdrInferedPhy(sdramLayout)
-
-  def connect(ctrl : SdramXdrBmbGenerator): this.type = {
-    ctrl.phyParameter.derivatedFrom(sdramLayout)(SdrInferedPhy.phyLayout)
-    List(ctrl.logic, logic).produce{
-      ctrl.logic.io.phy <> logic.io.ctrl
-    }
-    this
-  }
-}
-
 
 case class  BmbGpioGenerator(apbOffset : Handle[BigInt] = Unset)
                              (implicit interconnect: BmbInterconnectGenerator, decoder : BmbImplicitPeripheralDecoder = null) extends Generator{

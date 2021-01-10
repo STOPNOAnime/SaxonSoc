@@ -51,3 +51,6 @@ saxon_serial(){
   picocom -b 115200 /dev/ttyUSB1 --imap lfcrlf
 }
 
+saxon_gdb(){
+  riscv64-unknown-elf-gdb -ex 'target remote localhost:3333' -ex 'set remotetimeout 60' -ex 'set arch riscv:rv32' -ex 'monitor reset halt'
+}
