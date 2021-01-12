@@ -9,8 +9,10 @@ set_pin_assignment	{ jtag_tdo }	{ LOCATION = J11; }
 set_pin_assignment	{ jtag_tms }	{ LOCATION = J13; }
 set_pin_assignment	{ uart_rxd }	{ LOCATION = E16; }
 set_pin_assignment	{ uart_txd }	{ LOCATION = F16; }
-
-
+set_pin_assignment	{ sdcard_sclk }	{ LOCATION = M9; }
+set_pin_assignment	{ sdcard_ss[0] }	{ LOCATION = N14; }
+set_pin_assignment	{ sdcard_read[1] }	{ LOCATION = F13; }
+set_pin_assignment	{ sdcard_write[0] }	{ LOCATION = H14; }
 
 
 

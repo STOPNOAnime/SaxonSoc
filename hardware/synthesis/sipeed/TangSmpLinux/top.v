@@ -10,7 +10,13 @@ module top (
   output              uart_txd,
   input               uart_rxd,
   
-  inout wire [13:0]   gpioA
+  inout wire [13:0]   gpioA,
+
+  output wire [0:0]	  sdcard_ss,
+  output 			  sdcard_sclk,
+  input wire [1:0]	  sdcard_read,
+  output wire [1:0]	  sdcard_write
+
 );
 
 wire [13:0] gpioA_writeEnable;
@@ -68,7 +74,13 @@ TangSmpLinux TangSmpLinux (
 	.system_sdramA_sdram_CKE(sdram_CKE),
 	.system_sdramA_sdram_CSn(sdram_CSn),
 	.system_sdramA_sdram_RASn(sdram_RASn),
-	.system_sdramA_sdram_WEn(sdram_WEn)
+	.system_sdramA_sdram_WEn(sdram_WEn),
+
+	.system_spiA_sdcard_ss(sdcard_ss),
+  	.system_spiA_sdcard_sclk(sdcard_sclk),
+  	.system_spiA_sdcard_data_read(sdcard_read),
+  	.system_spiA_sdcard_data_write(sdcard_write)
+
 );
 
 EG_PHY_SDRAM_2M_32 EG_PHY_SDRAM_2M_32 (

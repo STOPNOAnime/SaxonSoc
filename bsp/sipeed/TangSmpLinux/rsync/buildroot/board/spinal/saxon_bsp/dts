@@ -12,7 +12,7 @@
     model = "spinal,vexriscv_sim";
 
     chosen {
-        bootargs = "rootwait console=hvc0  earlycon=sbi root=/dev/mmcblk0p2 init=/sbin/init mmc_core.use_spi_crc=0 loglevel=7";  //ignore_loglevel rng_core.default_quality=1000 random.trust_cpu=on
+        bootargs = "rootwait console=hvc0  earlycon=sbi root=/dev/mmcblk0p2 init=/bin/sh mmc_core.use_spi_crc=0 loglevel=7";  //ignore_loglevel rng_core.default_quality=1000 random.trust_cpu=on init=/sbin/init
 
         //bootargs = "rootwait console=hvc0 earlycon=sbi root=/dev/ram0 init=/sbin/init mmc_core.use_spi_crc=0"; 
         //not necessary if uboot is used
@@ -37,47 +37,6 @@
                 compatible = "riscv,cpu-intc";
             };
         };
-        /*cpu@1 {
-            device_type = "cpu";
-            compatible = "riscv";
-            riscv,isa = "rv32ima";
-            mmu-type = "riscv,sv32";
-            reg = <1>;
-            status = "okay";
-            L1: interrupt-controller {
-                #interrupt-cells = <0x00000001>;
-                interrupt-controller;
-                compatible = "riscv,cpu-intc";
-            };
-        };
-
-        cpu@2 {
-            device_type = "cpu";
-            compatible = "riscv";
-            riscv,isa = "rv32ima";
-            mmu-type = "riscv,sv32";
-            reg = <2>;
-            status = "okay";
-            L2: interrupt-controller {
-                #interrupt-cells = <0x00000001>;
-                interrupt-controller;
-                compatible = "riscv,cpu-intc";
-            };
-        };
-
-        cpu@3 {
-            device_type = "cpu";
-            compatible = "riscv";
-            riscv,isa = "rv32ima";
-            mmu-type = "riscv,sv32";
-            reg = <3>;
-            status = "okay";
-            L3: interrupt-controller {
-                #interrupt-cells = <0x00000001>;
-                interrupt-controller;
-                compatible = "riscv,cpu-intc";
-            };
-        };*/
     };
 
 
@@ -87,15 +46,13 @@
         reg = <0x80000000 0x00800000>;
     };
 
-
-
     reserved-memory {
         #address-cells = <1>;
         #size-cells = <1>;
         ranges;
 
-        opensbi: sbi@80780000 {
-            reg = <0x80780000 0x80000>;
+        opensbi: sbi@80000000 {
+            reg = <0x80600000 0x80000>;
         };
     };
 
@@ -210,73 +167,6 @@
             label = "led0_r";
             gpios = <&gpioA 14 0>;
             linux,default-trigger = "none";
-        };
-        led1_b {
-            label = "led1_b";
-            gpios = <&gpioA 15 0>;
-            linux,default-trigger = "none";
-        };
-        led1_g {
-            label = "led1_g";
-            gpios = <&gpioA 16 0>;
-            linux,default-trigger = "none";
-        };
-        led1_r {
-            label = "led1_r";
-            gpios = <&gpioA 17 0>;
-            linux,default-trigger = "none";
-        };
-        led2_b {
-            label = "led2_b";
-            gpios = <&gpioA 18 0>;
-            linux,default-trigger = "none";
-        };
-        led2_g {
-            label = "led2_g";
-            gpios = <&gpioA 19 0>;
-            linux,default-trigger = "none";
-        };
-        led2_r {
-            label = "led2_r";
-            gpios = <&gpioA 20 0>;
-            linux,default-trigger = "none";
-        };
-        led3_b {
-            label = "led3_b";
-            gpios = <&gpioA 21 0>;
-            linux,default-trigger = "none";
-        };
-        led3_g {
-            label = "led3_g";
-            gpios = <&gpioA 22 0>;
-            linux,default-trigger = "none";
-        };
-        led3_r {
-            label = "led3_r";
-            gpios = <&gpioA 23 0>;
-            linux,default-trigger = "none";
-        };
-
-
-        led4 {
-            label = "led4";
-            gpios = <&gpioA 8 0>;
-            linux,default-trigger = "none";
-        };
-        led5 {
-            label = "led5";
-            gpios = <&gpioA 9 0>;
-            linux,default-trigger = "none";
-        };
-        led6 {
-            label = "led6";
-            gpios = <&gpioA 10 0>;
-            linux,default-trigger = "none";
-        };
-        led7 {
-            label = "led7";
-            gpios = <&gpioA 11 0>;
-            linux,default-trigger = "mmc0";
         };
     };
 

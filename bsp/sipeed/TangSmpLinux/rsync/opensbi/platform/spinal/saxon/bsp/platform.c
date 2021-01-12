@@ -20,7 +20,7 @@
 
 /* clang-format off */
 
-#define VEX_HART_COUNT			4
+#define VEX_HART_COUNT			1
 #define VEX_PLATFORM_FEATURES  \
 	(SBI_PLATFORM_HAS_TIMER_VALUE | SBI_PLATFORM_HAS_MFAULTS_DELEGATION)
 
@@ -138,7 +138,7 @@ const struct sbi_platform_operations platform_ops = {
 const struct sbi_platform platform = {
 	.opensbi_version	= OPENSBI_VERSION,
 	.platform_version	= SBI_PLATFORM_VERSION(0x0, 0x01),
-	.name			    = "VexRiscv SMP simulation",
+	.name			    = "VexRiscv SMP SaxonSoc",
 	.features		    = VEX_PLATFORM_FEATURES,
 	.hart_count		    = VEX_HART_COUNT,
 	.hart_stack_size	= VEX_HART_STACK_SIZE,

@@ -54,3 +54,53 @@ saxon_serial(){
 saxon_gdb(){
   riscv64-unknown-elf-gdb -ex 'target remote localhost:3333' -ex 'set remotetimeout 60' -ex 'set arch riscv:rv32' -ex 'monitor reset halt'
 }
+
+saxon_sdcard_format(){
+  (
+  echo o
+  echo n
+  echo p
+  echo 1
+  echo
+  echo +100M
+  echo n
+  echo p
+  echo 2
+  echo
+  echo +500M
+  echo t
+  echo 1
+  echo b
+  echo p
+  echo w
+  ) | sudo fdisk /dev/sdb
+}
+
+saxon_sdcard_p1(){
+  cd $SAXON_ROOT
+  sudo mkdosfs /dev/sdb1
+  sudo mkdir -p sdcard
+  sudo mount /dev/sdb1 sdcard
+  sudo cp buildroot/output/images/dtb  sdcard/dtb
+  sudo cp buildroot/output/images/uImage  sdcard/uImage
+  sudo umount sdcard
+  sudo rm -r sdcard
+}
+
+saxon_sdcard_p2(){
+  cd $SAXON_ROOT
+  sudo mke2fs /dev/sdb2
+  sudo mkdir -p sdcard
+  sudo mount /dev/sdb2 sdcard
+  sudo cp buildroot/output/images/rootfs.tar rootfs.tar
+  sudo tar xf rootfs.tar -C sdcard
+  sudo umount sdcard
+  sudo rm rootfs.tar
+  sudo rm -r sdcard
+}
+
+saxon_flash_sd(){
+  saxon_sdcard_format
+  saxon_sdcard_p1
+  saxon_sdcard_p2
+}
