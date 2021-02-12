@@ -83,7 +83,7 @@ export PATH=~/opt/xpack-riscv-none-embed-gcc/bin:$PATH
 
 ```
 
-[You also need the TD IDE](https://tang.sipeed.com/en/getting-started/installing-td-ide/linux/)
+You also need the [TD IDE](https://tang.sipeed.com/en/getting-started/installing-td-ide/linux/) in path.
 
 ## Building everything
 
@@ -101,9 +101,10 @@ source SaxonSoc/bsp/sipeed/TangSmpLinux/source.sh
 # Clone opensbi, u-boot, linux, buildroot, openocd
 saxon_clone
 
-# Build the FPGA project
+# Build the FPGA bitstream
 saxon_standalone_compile bootloader
 saxon_netlist
+saxon_bitstream
 
 # Build the firmware
 saxon_opensbi
