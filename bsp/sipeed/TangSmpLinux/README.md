@@ -13,15 +13,7 @@ def busCapabilities(layout : SdramLayout) = BmbAccessCapabilities(
 - Sipeed Tang Board
 - USB micro cable
 - External JTAG interface
-- Optional SDCARD
-- Optional custom PS2 and VGA interface #TODO
-
-## Implemented peripherals
-
-* GPIO access in linux
-* SPI, which provide
-  * FPGA SPI flash access in Linux
-  * SDCARD in linux
+- SDCARD
 
 ## Boot sequence
 
@@ -91,6 +83,8 @@ export PATH=~/opt/xpack-riscv-none-embed-gcc/bin:$PATH
 
 ```
 
+[You also need the TD IDE](https://tang.sipeed.com/en/getting-started/installing-td-ide/linux/)
+
 ## Building everything
 
 It will take quite a while to build, good luck and have fun <3
@@ -137,5 +131,3 @@ saxon_serial
 # Boot linux using a sdcard
 saxon_buildroot_load
 ```
-
-setenv bootargs rootwait console=hvc0 earlycon=sbi root=/dev/mmcblk0p2 init=/linuxrc mmc_core.use_spi_crc=0 loglevel=7
