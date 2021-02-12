@@ -1,4 +1,6 @@
-## Remeber
+## Not Finished. 
+
+```
 in BmpSdramControl
 
 def busCapabilities(layout : SdramLayout) = BmbAccessCapabilities(
@@ -7,6 +9,7 @@ def busCapabilities(layout : SdramLayout) = BmbAccessCapabilities(
     lengthWidthMax   = log2Up(layout.dataWidth/8),
     alignment     = BmbParameter.BurstAlignement.LENGTH
   )
+```
 
 ## Hardware
 
