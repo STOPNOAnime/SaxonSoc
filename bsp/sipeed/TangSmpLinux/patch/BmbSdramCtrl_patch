@@ -1,0 +1,31 @@
+--- SaxonSoc/ext/SpinalHDL/lib/src/main/scala/spinal/lib/memory/sdram/sdr/BmbSdramCtrl.scala	2021-02-22 09:30:40.443298268 -0800
++++ SaxonSoc/ext/SpinalHDL/lib/src/main/scala/spinal/lib/memory/sdram/sdr/BmbSdramCtrlcopy.scala	2021-02-22 09:32:19.657000000 -0800
+@@ -6,17 +6,17 @@
+ import spinal.lib.memory.sdram.SdramLayout
+ 
+ object BmbSdramCtrl{
+-//  def bmbCapabilities(layout : SdramLayout) = BmbParameter(
+-//    addressWidth  = layout.byteAddressWidth,
+-//    dataWidth     = layout.dataWidth,
+-//    lengthWidth   = log2Up(layout.dataWidth/8),
+-//    sourceWidth   = Int.MaxValue,
+-//    contextWidth  = Int.MaxValue,
+-//    canRead       = true,
+-//    canWrite      = true,
+-//    alignment = BmbParameter.BurstAlignement.LENGTH,
+-//    maximumPendingTransactionPerId = Int.MaxValue
+-//  )
++  def bmbCapabilities(layout : SdramLayout) = BmbParameter(
++    addressWidth  = layout.byteAddressWidth,
++    dataWidth     = layout.dataWidth,
++    lengthWidth   = log2Up(layout.dataWidth/8),
++    sourceWidth   = Int.MaxValue,
++    contextWidth  = Int.MaxValue,
++    canRead       = true,
++    canWrite      = true,
++    alignment = BmbParameter.BurstAlignement.LENGTH,
++    maximumPendingTransactionPerId = Int.MaxValue
++  )
+ }
+ 
+ 

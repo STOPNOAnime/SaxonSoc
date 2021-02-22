@@ -91,8 +91,6 @@ source SaxonSoc/bsp/sipeed/TangSmpLinux/source.sh
 # Clone opensbi, u-boot, linux, buildroot, openocd
 saxon_clone
 
-# Uncomment def busCapabilities in BmpSdramControl
-
 # Build the FPGA bitstream
 saxon_standalone_compile bootloader
 saxon_netlist
