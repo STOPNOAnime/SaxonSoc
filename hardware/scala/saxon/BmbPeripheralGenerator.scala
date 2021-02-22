@@ -12,7 +12,7 @@ import spinal.lib.generator.{Dependable, Export, Generator, Handle, InterruptCtr
 import spinal.lib.io.{BmbGpio2, Gpio}
 import spinal.lib.master
 import spinal.lib.memory.sdram.SdramLayout
-import spinal.lib.memory.sdram.xdr.phy.{Ecp5Sdrx2Phy, XilinxS7Phy, SdrInferedPhy}
+import spinal.lib.memory.sdram.xdr.phy.{Ecp5Sdrx2Phy, XilinxS7Phy}
 import spinal.lib.memory.sdram.xdr.{BmbPortParameter, CoreParameter, CtrlParameter, CtrlWithPhy, CtrlWithoutPhy, CtrlWithoutPhyBmb, PhyLayout}
 import spinal.lib.misc.{BmbClint, Clint}
 import spinal.lib.misc.plic.{PlicGateway, PlicGatewayActiveHigh, PlicMapper, PlicMapping, PlicTarget}
@@ -192,6 +192,7 @@ case class Ecp5Sdrx2PhyGenerator() extends Generator{
     this
   }
 }
+
 
 
 case class  BmbGpioGenerator(apbOffset : Handle[BigInt] = Unset)

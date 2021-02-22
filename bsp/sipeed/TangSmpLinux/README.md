@@ -1,22 +1,9 @@
-## Not Finished. 
-
-```
-in BmpSdramControl
-
-def busCapabilities(layout : SdramLayout) = BmbAccessCapabilities(
-    addressWidth  = layout.byteAddressWidth,
-    dataWidth     = layout.dataWidth,
-    lengthWidthMax   = log2Up(layout.dataWidth/8),
-    alignment     = BmbParameter.BurstAlignement.LENGTH
-  )
-```
-
 ## Hardware
 
 - Sipeed Tang Board
-- USB micro cable
+- Micro USB cable
 - External JTAG interface
-- SDCARD
+- SD card
 
 ## Boot sequence
 
@@ -104,10 +91,12 @@ source SaxonSoc/bsp/sipeed/TangSmpLinux/source.sh
 # Clone opensbi, u-boot, linux, buildroot, openocd
 saxon_clone
 
+# Uncomment def busCapabilities in BmpSdramControl
+
 # Build the FPGA bitstream
 saxon_standalone_compile bootloader
 saxon_netlist
-saxon_bitstream
+saxon_bitstream_compile
 
 # Build the firmware
 saxon_opensbi
@@ -127,7 +116,7 @@ source SaxonSoc/bsp/sipeed/TangSmpLinux/source.sh
 saxon_bitstream_flash
 
 # Flash the sd card
-saxon_flash_sd
+saxon_flash_sd /dev/sd_card
 
 # Connecting the USB serial port
 saxon_serial

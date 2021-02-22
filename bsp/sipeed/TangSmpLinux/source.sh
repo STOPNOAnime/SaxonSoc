@@ -15,9 +15,6 @@ SAXON_BUILDROOT_OVERLAY=board/spinal/saxon_bsp/rootfs_overlay
 
 # Fixes
 SAXON_FIXES=()
-SAXON_FIXES+=($SAXON_ROOT/SaxonSoc/bsp/common/fixes/buildroot/libopenssl/vexriscv_aes)
-SAXON_FIXES+=($SAXON_ROOT/SaxonSoc/bsp/common/fixes/buildroot/dropbear/vexriscv_aes)
-SAXON_FIXES+=($SAXON_ROOT/SaxonSoc/bsp/common/fixes/buildroot/dropbear/no_swap)
 SAXON_FIXES+=($SAXON_ROOT/SaxonSoc/bsp/common/fixes/buildroot/rng-tools/use_urandom)
 
 # Functionalities
@@ -32,9 +29,9 @@ saxon_netlist(){
   sbt "runMain saxon.board.sipeed.TangSmpLinux"
 }
 
-saxon_bitstream(){
+saxon_bitstream_compile(){
   cd $SAXON_SOC/hardware/synthesis/sipeed/TangSmpLinux
-  make all
+  make build
 }
 
 saxon_bitstream_flash(){

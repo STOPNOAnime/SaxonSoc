@@ -4,12 +4,12 @@ ROOT=../../../..
 TOP=TangSmpLinux
 TOPV=../../../netlist/$(TOP).v
 
-all : build/latest.bit
+all : build
 
-build/latest.bit : adc.adc sdc.sdc top.v $(TOPV)
+build : adc.adc sdc.sdc top.v $(TOPV)
 	./make_project
 
-flash : build/latest.bit
+flash : ./build/top.bit
 	./write_flash
 
 .PHONY: clean
