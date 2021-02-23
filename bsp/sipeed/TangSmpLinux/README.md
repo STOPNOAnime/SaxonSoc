@@ -77,8 +77,6 @@ You also need the [TD IDE](https://tang.sipeed.com/en/getting-started/installing
 
 ## Building everything
 
-It will take quite a while to build, good luck and have fun <3
-
 ```
 # Getting this repository
 mkdir TangSmpLinux 
@@ -116,9 +114,16 @@ saxon_bitstream_flash
 # Flash the sd card. IMPORTANT: replace "/dev/sd_card" with a proper dev device for your sd card
 saxon_flash_sd /dev/sd_card
 
-# Connecting the USB serial port
+# Place the sd card into the FPGA
+
+# Connect the USB serial port
 saxon_serial
 
-# Boot linux using a sdcard
+# Boot linux with openocd
 saxon_buildroot_load
+
+# Wait until linux is loaded and then execute these commands to flash the SPI Flash
+TO DO
+
+# Now you should be able to reset the board and see it boot linux on the serial terminal. You now have working linux :)
 ```
