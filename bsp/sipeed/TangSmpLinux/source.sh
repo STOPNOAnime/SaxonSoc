@@ -75,6 +75,7 @@ saxon_sdcard_format(){
 
 saxon_sdcard_p1(){
   cd $SAXON_ROOT
+  umount $11
   sudo mkdosfs $11
   sudo mkdir -p sdcard
   sudo mount $11 sdcard
@@ -86,6 +87,7 @@ saxon_sdcard_p1(){
 
 saxon_sdcard_p2(){
   cd $SAXON_ROOT
+  umount $12
   sudo mke2fs $12
   sudo mkdir -p sdcard
   sudo mount $12 sdcard
