@@ -113,7 +113,7 @@ source SaxonSoc/bsp/sipeed/TangSmpLinux/source.sh
 # Flash the FPGA Bitstream
 saxon_bitstream_flash
 
-# Flash the sd card
+# Flash the sd card. IMPORTANT: replace "/dev/sd_card" with a proper dev device for your sd card
 saxon_flash_sd /dev/sd_card
 
 # Connecting the USB serial port
