@@ -1,5 +1,3 @@
-
-
 /dts-v1/;
 #include <dt-bindings/gpio/gpio.h>
 #include <dt-bindings/input/input.h>
@@ -12,12 +10,7 @@
     model = "spinal,vexriscv_sim";
 
     chosen {
-        bootargs = "rootwait console=hvc0  earlycon=sbi root=/dev/mmcblk0p2 init=/bin/sh mmc_core.use_spi_crc=0 loglevel=7";  //ignore_loglevel rng_core.default_quality=1000 random.trust_cpu=on init=/sbin/init
-
-        //bootargs = "rootwait console=hvc0 earlycon=sbi root=/dev/ram0 init=/sbin/init mmc_core.use_spi_crc=0"; 
-        //not necessary if uboot is used
-        //linux,initrd-start = <0x81000000>;
-        //linux,initrd-end =   <0x82000000>; 
+        bootargs = "rootwait console=hvc0  earlycon=sbi root=/dev/mmcblk0p2 init=/sbin/init mmc_core.use_spi_crc=0 loglevel=7";  //ignore_loglevel rng_core.default_quality=1000 random.trust_cpu=on init=/sbin/init
     };
 
     cpus {
@@ -88,7 +81,6 @@
             riscv,ndev = <32>;
         };
 
-
         gpioA: gpio@0 {
             compatible = "spinal-lib,gpio-1.0";
             interrupt-parent = <&plic>;
@@ -101,11 +93,11 @@
             #interrupt-cells = <2>;
         };
 
-       /* uartA: ttySpinal@10000 {
+        uartA: ttySpinal@10000 {
                 compatible = "spinal-lib,uart-1.0";
                 reg = <0x10000 0x1000>;
                 clocks = <&apbA_clock 0>;
-        };*/
+        };
 
        /* rngA: rng@b10000 {
             compatible = "spinal-lib,rng";
@@ -148,37 +140,6 @@
 
         };
     };
-
-    leds: leds {
-        compatible = "gpio-leds";
-
-
-        led0_b {
-            label = "led0_b";
-            gpios = <&gpioA 12 0>;
-            linux,default-trigger = "none";
-        };
-        led0_g {
-            label = "led0_g";
-            gpios = <&gpioA 13 0>;
-            linux,default-trigger = "none";
-        };
-        led0_r {
-            label = "led0_r";
-            gpios = <&gpioA 14 0>;
-            linux,default-trigger = "none";
-        };
-    };
-
-/*
-    i2cA: i2cA {
-        compatible = "i2c-gpio";
-        sda-gpios = <&gpioA 24 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-        scl-gpios = <&gpioA 25 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-        i2c-gpio,delay-us = <3>;	
-        #address-cells = <1>;
-        #size-cells = <0>;
-    };*/
 };
 
 

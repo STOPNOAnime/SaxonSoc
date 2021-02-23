@@ -12,8 +12,6 @@
 #define BSP_CLINT_HZ SYSTEM_CLINT_HZ
 
 #define BSP_UART_TERMINAL SYSTEM_UART_A_CTRL
-#define BSP_LED_GPIO SYSTEM_GPIO_A_CTRL
-#define BSP_LED_MASK 0x01
 
 #define bsp_init() {}
 #define bsp_putChar(c) uart_write(BSP_UART_TERMINAL, c);

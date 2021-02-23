@@ -88,8 +88,8 @@ saxon_sdcard_p2(){
   cd $SAXON_ROOT
   sudo umount $12
   sudo mke2fs $12
-  rm -rf sdcard2
-  mkdir -p sdcard2
+  sudo rm -rf sdcard2
+  sudo mkdir -p sdcard2
   sudo mount $12 sdcard2
   sudo tar xf buildroot/output/images/rootfs.tar -C sdcard2
 }
