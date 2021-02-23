@@ -77,23 +77,21 @@ saxon_sdcard_p1(){
   cd $SAXON_ROOT
   sudo umount $11
   sudo mkdosfs $11
-  sudo mkdir -p sdcard
-  sudo mount $11 sdcard
-  sudo cp buildroot/output/images/dtb  sdcard/dtb
-  sudo cp buildroot/output/images/uImage  sdcard/uImage
-  sudo umount sdcard
-  sudo rm -rf sdcard
+  sudo rm -rf sdcard1
+  sudo mkdir -p sdcard1
+  sudo mount $11 sdcard1
+  sudo cp buildroot/output/images/dtb  sdcard1/dtb
+  sudo cp buildroot/output/images/uImage  sdcard1/uImage
 }
 
 saxon_sdcard_p2(){
   cd $SAXON_ROOT
   sudo umount $12
   sudo mke2fs $12
-  sudo mkdir -p sdcard
-  sudo mount $12 sdcard
-  sudo tar xf buildroot/output/images/rootfs.tar -C sdcard
-  sudo umount sdcard
-  sudo rm -rf sdcard
+  rm -rf sdcard2
+  mkdir -p sdcard2
+  sudo mount $12 sdcard2
+  sudo tar xf buildroot/output/images/rootfs.tar -C sdcard2
 }
 
 saxon_flash_sd(){
