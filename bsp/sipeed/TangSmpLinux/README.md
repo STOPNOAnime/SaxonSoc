@@ -1,3 +1,6 @@
+## Info
+Linux starts booting but it is extreamly slow and shows weird errors. Sadly i dont know how to fix them :(
+
 ## Hardware
 
 - Sipeed Tang Board
@@ -124,6 +127,4 @@ saxon_buildroot_load
 
 # Wait until linux is loaded and then execute these commands to flash the SPI Flash
 TO DO
-
-# Now you should be able to reset the board and see it boot linux on the serial terminal. You now have working linux :)
 ```
