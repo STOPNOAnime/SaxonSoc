@@ -103,7 +103,7 @@ saxon_buildroot
 saxon_openocd
 ```
 
-## Loading the FPGA and booting linux with sd card using openocd
+## Loading the FPGA bitstream and booting linux
 
 ```
 source SaxonSoc/bsp/sipeed/TangSmpLinux/source.sh
