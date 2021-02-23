@@ -70,34 +70,39 @@ saxon_sdcard_format(){
   echo b
   echo p
   echo w
-  ) | sudo fdisk /dev/sdb
+  ) | sudo fdisk $1
 }
 
 saxon_sdcard_p1(){
   cd $SAXON_ROOT
-  sudo mkdosfs /dev/sdb1
+  sudo mkdosfs $11
   sudo mkdir -p sdcard
-  sudo mount /dev/sdb1 sdcard
+  sudo mount $11 sdcard
   sudo cp buildroot/output/images/dtb  sdcard/dtb
   sudo cp buildroot/output/images/uImage  sdcard/uImage
   sudo umount sdcard
-  sudo rm -r sdcard
+  sudo rm -rf sdcard
 }
 
 saxon_sdcard_p2(){
   cd $SAXON_ROOT
-  sudo mke2fs /dev/sdb2
+  sudo mke2fs $12
   sudo mkdir -p sdcard
-  sudo mount /dev/sdb2 sdcard
+  sudo mount $12 sdcard
   sudo cp buildroot/output/images/rootfs.tar rootfs.tar
   sudo tar xf rootfs.tar -C sdcard
   sudo umount sdcard
   sudo rm rootfs.tar
-  sudo rm -r sdcard
+  sudo rm -rf sdcard
 }
 
 saxon_flash_sd(){
-  saxon_sdcard_format
-  saxon_sdcard_p1
-  saxon_sdcard_p2
+  if [ -z "$1" ]
+  then
+    echo "No argument supplied"
+  else
+    saxon_sdcard_format $1
+    saxon_sdcard_p1 $1
+    saxon_sdcard_p2 $1
+  fi
 }
