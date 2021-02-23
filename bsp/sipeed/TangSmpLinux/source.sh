@@ -75,7 +75,7 @@ saxon_sdcard_format(){
 
 saxon_sdcard_p1(){
   cd $SAXON_ROOT
-  umount $11
+  sudo umount $11
   sudo mkdosfs $11
   sudo mkdir -p sdcard
   sudo mount $11 sdcard
@@ -87,14 +87,12 @@ saxon_sdcard_p1(){
 
 saxon_sdcard_p2(){
   cd $SAXON_ROOT
-  umount $12
+  sudo umount $12
   sudo mke2fs $12
   sudo mkdir -p sdcard
   sudo mount $12 sdcard
-  sudo cp buildroot/output/images/rootfs.tar rootfs.tar
-  sudo tar xf rootfs.tar -C sdcard
+  sudo tar xf buildroot/output/images/rootfs.tar -C sdcard
   sudo umount sdcard
-  sudo rm rootfs.tar
   sudo rm -rf sdcard
 }
 
