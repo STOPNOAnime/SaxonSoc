@@ -6,6 +6,7 @@ TOPV=../../../netlist/$(TOP).v
 
 all : build
 
+.PHONY: build
 build : adc.adc sdc.sdc top.v $(TOPV)
 	./make_project
 
